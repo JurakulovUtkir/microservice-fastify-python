@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastify-api
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: main
+      NODE_ENV: development
+      GEMINI_API_KEY: AIzaSyBwGox2rhERcPpNtydd3Cd5AAY3SlU-BnY
+    networks:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    # Removed depends_on section since postgres is in another file
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 200M
+
+networks:
+  backend:
+    driver: bridge
