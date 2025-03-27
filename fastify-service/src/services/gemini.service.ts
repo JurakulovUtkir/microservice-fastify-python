@@ -18,18 +18,17 @@ export class GeminiService {
     });
   }
 
-  async generateContent(prompt: string): Promise<string> {
+  async generateContent(prompt: string, question: string): Promise<string> {
     try {
-      const my_prompt = `Acknowledge the limitations of providing legal advice and emphasize the importance of consulting with a qualified legal professional for specific situations no more than 200 words answer, please answer in uzbek :`;
       const result = await this.model.generateContent({
         contents: [
           {
             role: "user",
-            parts: [{ text: my_prompt + prompt }],
+            parts: [{ text: prompt + question }],
           },
         ],
         generationConfig: {
-          maxOutputTokens: 1000,
+          maxOutputTokens: 500,
           temperature: 0.1,
         },
       });
